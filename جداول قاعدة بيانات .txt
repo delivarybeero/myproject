@@ -1,0 +1,151 @@
+-- جدول المشرفين
+CREATE TABLE admins (
+    id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    email VARCHAR(255),
+    password VARCHAR(255) NOT NULL
+);
+
+-- جدول المستخدمين
+CREATE TABLE users (
+    id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP()
+);
+
+-- جدول الأقسام
+CREATE TABLE section (
+    id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    section_name VARCHAR(225) NOT NULL
+);
+
+-- جدول المنتجات
+CREATE TABLE products (
+    id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    description TEXT,
+    price DECIMAL(10,2) NOT NULL,
+    quantity INT(11) NOT NULL,
+    image VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP(),
+    prosection VARCHAR(225),
+    prosize VARCHAR(225),
+    prounv VARCHAR(225)
+);
+
+-- جدول مستخدمي الجلسات
+CREATE TABLE session_users (
+    session_id VARCHAR(255) NOT NULL PRIMARY KEY,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP()
+);
+
+-- جدول عربة التسوق
+CREATE TABLE cart1 (
+    cart_id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    session_id VARCHAR(255) NOT NULL,
+    product_id INT(11),
+    quantity INT(11),
+    added_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP(),
+    price DECIMAL(10,2),
+    img VARCHAR(255),
+    name VARCHAR(255),
+    FOREIGN KEY (session_id) REFERENCES session_users(session_id),
+    FOREIGN KEY (product_id) REFERENCES products(id)
+);
+
+-- جدول الطلبات
+CREATE TABLE orders1 (
+    order_id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    user_id INT(11),
+    customer_name VARCHAR(100),
+    order_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP(),
+    total_amount DECIMAL(10,2),
+    status VARCHAR(50),
+    phone VARCHAR(20),
+    session_id VARCHAR(255),
+    shipping_address TEXT,
+    order_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP()
+);
+
+-- جدول تفاصيل الطلبات
+CREATE TABLE order_details (
+    detail_id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    order_id INT(11) NOT NULL,
+    product_id INT(11) NOT NULL,
+    product_name VARCHAR(255) NOT NULL,
+    product_price DECIMAL(10,2) NOT NULL,
+    product_quantity INT(11) NOT NULL,
+    FOREIGN KEY (order_id) REFERENCES orders1(order_id)
+);
+
+-- جدول عناصر الطلبات
+CREATE TABLE orders1_items (
+    order_item_id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    order_id INT(11),
+    customer_name VARCHAR(100),
+    product_id INT(11),
+    quantity INT(11),
+    price DECIMAL(10,2),
+    FOREIGN KEY (order_id) REFERENCES orders1(order_id),
+    FOREIGN KEY (product_id) REFERENCES products(id)
+);
+
+-- جدول التعليقات
+CREATE TABLE commint (
+    id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    comment TEXT NOT NULL
+);
+
+-- جدول إعدادات الموقع
+CREATE TABLE site_settings (
+    id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    site_name VARCHAR(100) NOT NULL DEFAULT 'shopping_online',
+    logo_path VARCHAR(255) NOT NULL DEFAULT 'images/a1.png',
+    phone_number VARCHAR(20),
+    whatsapp VARCHAR(20),
+    facebook VARCHAR(255),
+    twitter VARCHAR(255),
+    instagram VARCHAR(255),
+    messenger VARCHAR(255)
+);
+_________________________
+
+CREATE TABLE deleted_orders (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    order_id INT,
+    customer_name VARCHAR(255),
+    shipping_address TEXT,
+    phone VARCHAR(20),
+    total_amount DECIMAL(10,2),
+    status VARCHAR(50),
+    order_date DATETIME,
+    deleted_at DATETIME,
+    deleted_by VARCHAR(255)
+
+
+    
+);
+
+ALTER TABLE commint 
+    ADD COLUMN product_id INT NOT NULL,
+    ADD CONSTRAINT fk_product FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE; 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    

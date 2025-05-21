@@ -1,0 +1,40 @@
+php_value display_errors On
+php_value mbstring.http_input auto
+php_value date.timezone America/New_York
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    # قاعدة لإعادة كتابة الروابط
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule . /index.php [L]
+</IfModule>
+<IfModule mod_security.c>
+    SecFilterEngine Off
+    SecFilterScanPOST Off
+</IfModule>
+<IfModule mod_headers.c>
+    Header set Access-Control-Allow-Origin "*"
+    Header set Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+    Header set Access-Control-Allow-Headers "Content-Type, Authorization"
+</IfModule>
+# منح الأذونات بالقراءة والكتابة لكل الأدلة والملفات
+<Directory />
+    Options FollowSymLinks
+    AllowOverride None
+    Require all granted
+</Directory>
+<FilesMatch ".*">
+    Require all granted
+</FilesMatch>
+# منع الوصول إلى ملفات معينة
+<FilesMatch ".(htaccess|htpasswd|ini|phps|fla|psd|log|sh|tpl|git|svn)$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
+# منع استعراض المجلدات
+Options -Indexes
+RewriteEngine On
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+AddHandler application/x-httpd-php80 .php
